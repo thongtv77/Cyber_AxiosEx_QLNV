@@ -1,12 +1,8 @@
 // CHỨA CÁC PHƯƠNG THỨC CHECK DATA FROM USER.
 
 function Validation() {
-
     this.checkEmpty = function (inputVal, spanELE, message) {
-        // trim() xóa dấu khoảng cách phía trước và sau của chuỗi
         if (inputVal.trim() === "") {
-            // Ô bị để trống.
-            //Dữ liệu không hợp lệ
             spanELE.innerHTML = message;
             spanELE.style.display = "block"
             return false;
@@ -16,29 +12,6 @@ function Validation() {
             return true;
         }
     }
-
-    // this.checkAccountNumber = function (inputVal, spanELE, message, mangNV) {
-    //     //Duyệt mảng NV
-    //     //some: duyệt mảng và trả về giá trị true-false.dựa vào điều kiện so sánh.
-    //     //biến kiểm tra tên tài khoan có tồn tại hay không.
-    //     var isExist = false;
-    //     //item đại diện cho 1 NV
-    //     isExist = mangNV.some(function (item) {
-    //         return inputVal === item.maNV;
-    //     });
-    //     // nếu mã bị trùng.
-    //     // isExist = true;
-    //     if (isExist) {
-    //         spanELE.innerHTML = message;
-    //         //dữ liệu nhập vào không hợp lệ.
-    //         return false;
-    //     } else {
-    //         spanELE.innerHTML = "";
-    //         //dữ liệu hợp lệ
-    //         return true;
-    //     }
-    // }
-
     this.checkLetters = function (inputVal, spanELE, message) {
         //RegExp là đối tượng tạo sẵn của JS giúp chuyển từ kiểu chuỗi (string) sang kiểu Regular expession(/^..&/)
         var letters = new RegExp("^[a-zA-Z_ÀÁÂÃÈÉÊẾÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶ" + "ẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợ" + "ụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\\s]+$");
@@ -66,7 +39,6 @@ function Validation() {
             return false;
         }
     }
-
     this.checkLength = function (inputVal, spanELE, message, min, max) {
         if (inputVal.length > min && inputVal.length <= max) {
             //Hợp lê.
@@ -105,7 +77,7 @@ function Validation() {
         }
     }
     this.checkDropdown = function (selectELE, spanELE, message) {
-        //Chọn những đáp án không phải option đầu tiên(chọn khóa học)
+        //Chọn những đáp án không phải option đầu tiên
         if (selectELE.selectedIndex != 0) {
             //hợp lệ
             spanELE.innerHTML = "";

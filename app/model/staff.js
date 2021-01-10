@@ -1,6 +1,6 @@
 //class Người Dùng(user).
 
-function Staff(_taiKhoan, _hoTen, _matKhau, _email, _ngayLam, _luongCB, _chucVu, _gioLam, _tongLuong, _loaiNV) {
+function Staff(_taiKhoan, _hoTen, _matKhau, _email, _ngayLam, _luongCB, _chucVu, _gioLam) {
     this.taiKhoan = _taiKhoan;
     this.hoTen = _hoTen;
     this.matKhau = _matKhau;
@@ -9,22 +9,21 @@ function Staff(_taiKhoan, _hoTen, _matKhau, _email, _ngayLam, _luongCB, _chucVu,
     this.luongCB = _luongCB;
     this.chucVu = _chucVu;
     this.gioLam = _gioLam;
-    this.tongLuong = 0;
+
+    this.tongLuong = _luongCB;
     this.loaiNV = "";
+    
     //Phương tính lương
-    this.calcSalary = function (chucVuNhanVien, luongCBNhanVien) {
-        var chucVuNhanVien = document.getElementById("chucvu").value;
-        console.log(chucVuNhanVien)
-        this.tongLuong = 0;
-        switch (chucVuNhanVien) {
+    this.calcSalary = function () {
+        switch (this.chucVu) {
             case "Sếp":
-                this.tongLuong = luongCBNhanVien * 3;
+                this.tongLuong = this.luongCB * 3;
                 break;
             case "Trưởng phòng":
-                this.tongLuong = luongCBNhanVien * 2;
+                this.tongLuong = this.luongCB * 2;
                 break;
             default:
-                this.tongLuong = luongCBNhanVien * 1;
+                this.tongLuong = this.luongCB ;
         }
         return tongLuong;
     }
