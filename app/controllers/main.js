@@ -1,6 +1,6 @@
 //Instance
 var staff = new staffServices();
-// var validation = new Validation();
+var validation = new Validation();
 // Function getDOM.
 function getELE(id) {
     return document.getElementById(id);
@@ -43,10 +43,8 @@ function showTable(mangDS) {
     });
     tbody.innerHTML = content;
 }
-getELE("btnThemNV").addEventListener("click", function () {
-    addStaff();
-});
-function addStaff() {
+
+function getInfroFromUser() {
     var taiKhoan = getELE("tknv").value;
     var hoTen = getELE("name").value;
     var email = getELE("email").value;
@@ -57,44 +55,38 @@ function addStaff() {
     var gioLam = getELE("gioLam").value;
     var nhanVien = new staff(taiKhoan, hoTen, matKhau, email, ngayLam, luongCB, chucVu, gioLam)
     console.log(nhanVien);
-    staff.AddStaffServices(nhanVien)
-        .then(function (result) {
-            console.log(result);
-            //Nếu thêm thành công thì load lại danh sách người dùng.
-            GetListStaff();
-            getELE("btnDong").click();
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
 
+    // Check Validation.
     var iSValid = true;
-    // Check account__No Empty__CheckLength
-    iSValid &= validation.checkEmpty(taiKhoan, getELE("spanMaSV"), "Mã nhân viên không được để trống!") && validation.checkAccountNumber(taiKhoan, getELE("spanMaSV"), "Mã nhân viên không được trùng!", dssv.mangSV);
+    // Kiểm tra tài khoản__CheckEmpty__CheckLength
+    iSValid &= validation.checkEmpty(taiKhoan, getELE("tbTKNV"), "Tên tài khoản không được để trống!") && validation.checkValue(taiKhoan, getELE("tbTKNV"), "Tên tài khoản tối đa 4-6 ký sô", 4, 6);
 
     // Ten NV không được để trống và tên phải là chữ
-    iSValid &= validation.checkEmpty(hoTen, getELE("tbTKNV"), "Tên NV không được để trống!") && validation.checkLetters(hoTen, getELE("tbTKNV"), "Tên NV không hợp lệ");
+    iSValid &= validation.checkEmpty(hoTen, getELE("tbTen"), "Tên NV không được để trống!") && validation.checkLetters(hoTen, getELE("tbTen"), "Tên NV không hợp lệ");
 
     //Email phải đúng format
-    iSValid &= validation.checkEmpty(email, getELE("spanEmail"), "Email không được để trống!") && validation.checkEmail(email, getELE("spanEmail"), "Email không hợp lệ!");
+    iSValid &= validation.checkEmpty(email, getELE("tbEmail"), "Email không được để trống!") && validation.checkEmail(email, getELE("tbEmail"), "Email không hợp lệ!");
 
     //check mật khẩu: không được để trống và có độ dài 6-10 ký tự và đúng format của mật khẩu(có ít nhất 1 chữ , 1 số, 1 ký tự đặc biệt)
-    iSValid &= validation.checkEmpty(matKhau, getELE("spanPass"), "Password không được để trống!") && validation.checkLength(matKhau, getELE("spanPass"), "Password có độ dài từ 6-10 ký tự!", 6, 10) && validation.checkFormartPass(matKhau, getELE("spanPass"), "Password không hợp lệ");
+    iSValid &= validation.checkEmpty(matKhau, getELE("password"), "Password không được để trống!") && validation.checkLength(matKhau, getELE("password"), "Password có độ dài từ 6-10 ký tự!", 6, 10) && validation.checkFormartPass(matKhau, getELE("password"), "Password không hợp lệ");
 
     //check ngày làm: kiểm tra có đúng theo format yyyy/dd/mm
-    iSValid &= validation.checkDate(ngayLam, getELE("spanDate"), "Ngày sinh không hợp lệ!");
+    iSValid &= validation.checkDate(ngayLam, getELE("tbNgay"), "Ngày sinh không hợp lệ!");
+
+    //check lương Cơ bản
+    iSValid &= validation.checkEmpty(luongCB, getELE("tbLuongCB"), "Điểm Toán không được để trống!") && validation.checkValue(luongCB, getELE("tbTKNV"), "Lương cơ bản 1 000 000 - 20 000 000", 1000000, 20000000);
 
     //check CHỨC VỤ:phải lựa chọn các option khác cái đầu tiên.
     iSValid &= validation.checkDropdown(getELE("chucvu"), getELE("tbChucVu"), "Hãy chọn đúng chức vụ nhé!");
 
-    //check điểm:không được để tróng và phải là kiểu số (interger, float) không có số âm.
-    iSValid &= validation.checkEmpty(toan, getELE("spanToan"), "Điểm Toán không được để trống!") && validation.checkScore(toan, getELE("spanToan", "Điểm toán không hợp lệ"));
+    //check Giờ Làm
+    iSValid &= validation.checkEmpty(gioLam, getELE("tbGiolam"), "Điểm Toán không được để trống!") && validation.checkValue(gioLam, getELE("tbGiolam"), "Giờ làm từ 80 - 200 giờ", 80, 200);
 
     // iSValid = true;
     if (iSValid) {
         //Thể hiện của lớp đối tượng 
         var nhanVien = new staff(taiKhoan, hoTen, matKhau, email, ngayLam, luongCB, chucVu, gioLam);
-        nhanVien.tinhDTB(nhanVien.diemToan, sv.diemLy, sv.diemHoa)
+        
 
         return nhanVien;
     } else {
@@ -103,6 +95,25 @@ function addStaff() {
 
 
 }
+function addStaff() {
+    var newNhanVien = getInfroFromUser();
+    if (newNhanVien) {
+        staff.AddStaffServices(nhanVien)
+            .then(function (result) {
+                console.log(result);
+                //Nếu thêm thành công thì load lại danh sách người dùng.
+                GetListStaff();
+                // getELE("btnDong").click();
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    }
+
+}
+getELE("btnThemNV").addEventListener("click", function () {
+    addStaff();
+});
 //Function Delete Staff__1.1
 function deleteStaff(id) {
     staff.DeleteStaffServices(id)
