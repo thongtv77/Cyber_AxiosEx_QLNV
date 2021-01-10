@@ -1,6 +1,6 @@
 //class Người Dùng(user).
 
-function staff(_taiKhoan, _hoTen, _matKhau, _email, _ngayLam, _luongCB, _chucVu, _gioLam, _tongLuong, _loaiNV) {
+function Staff(_taiKhoan, _hoTen, _matKhau, _email, _ngayLam, _luongCB, _chucVu, _gioLam, _tongLuong, _loaiNV) {
     this.taiKhoan = _taiKhoan;
     this.hoTen = _hoTen;
     this.matKhau = _matKhau;

@@ -1,5 +1,5 @@
 //Instance
-var staff = new staffServices();
+var newStaff = new staffServices();
 var validation = new Validation();
 // Function getDOM.
 function getELE(id) {
@@ -8,7 +8,7 @@ function getELE(id) {
 GetListStaff();
 // Function---GetListStaff
 function GetListStaff() {
-    var promise = staff.getListStaffServices();
+    var promise = newStaff.getListStaffServices();
     promise.then(function (result) {
         // Nếu thành công.
         // result chứa nhiều thuộc tính nên cần gọi đến data để lấy dữ liệu từ BE.
@@ -53,8 +53,6 @@ function getInfroFromUser() {
     var luongCB = getELE("luongCB").value;
     var chucVu = getELE("chucvu").value;
     var gioLam = getELE("gioLam").value;
-    var nhanVien = new staff(taiKhoan, hoTen, matKhau, email, ngayLam, luongCB, chucVu, gioLam)
-    console.log(nhanVien);
 
     // Check Validation.
     var iSValid = true;
@@ -74,52 +72,49 @@ function getInfroFromUser() {
     iSValid &= validation.checkDate(ngayLam, getELE("tbNgay"), "Ngày sinh không hợp lệ!");
 
     //check lương Cơ bản
-    iSValid &= validation.checkEmpty(luongCB, getELE("tbLuongCB"), "Điểm Toán không được để trống!") && validation.checkValue(luongCB, getELE("tbTKNV"), "Lương cơ bản 1 000 000 - 20 000 000", 1000000, 20000000);
+    iSValid &= validation.checkEmpty(luongCB, getELE("tbLuongCB"), "Lương cơ bản không được để trống!") && validation.checkValue(luongCB, getELE("tbTKNV"), "Lương cơ bản 1 000 000 - 20 000 000", 1000000, 20000000);
 
     //check CHỨC VỤ:phải lựa chọn các option khác cái đầu tiên.
     iSValid &= validation.checkDropdown(getELE("chucvu"), getELE("tbChucVu"), "Hãy chọn đúng chức vụ nhé!");
 
     //check Giờ Làm
-    iSValid &= validation.checkEmpty(gioLam, getELE("tbGiolam"), "Điểm Toán không được để trống!") && validation.checkValue(gioLam, getELE("tbGiolam"), "Giờ làm từ 80 - 200 giờ", 80, 200);
+    iSValid &= validation.checkEmpty(gioLam, getELE("tbGiolam"), "Giờ làm không được để trống!") && validation.checkValue(gioLam, getELE("tbGiolam"), "Giờ làm từ 80 - 200 giờ", 80, 200);
 
     // iSValid = true;
     if (iSValid) {
         //Thể hiện của lớp đối tượng 
-        var nhanVien = new staff(taiKhoan, hoTen, matKhau, email, ngayLam, luongCB, chucVu, gioLam);
-        
-
+        var nhanVien = new Staff(taiKhoan, hoTen, matKhau, email, ngayLam, luongCB, chucVu, gioLam);
+        nhanVien.calcSalary(nhanVien.chucVu, nhanVien.luongCB);
+        nhanVien.Classification(nhanVien.gioLam);
         return nhanVien;
     } else {
         return false;
     }
-
-
-}
-function addStaff() {
-    var newNhanVien = getInfroFromUser();
-    if (newNhanVien) {
-        staff.AddStaffServices(nhanVien)
-            .then(function (result) {
-                console.log(result);
-                //Nếu thêm thành công thì load lại danh sách người dùng.
-                GetListStaff();
-                // getELE("btnDong").click();
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
-    }
-
 }
 getELE("btnThemNV").addEventListener("click", function () {
     addStaff();
 });
+function addStaff() {
+    var newNhanVien = getInfroFromUser();
+    newStaff.AddStaffServices(newNhanVien)
+        .then(function (result) {
+            console.log(result);
+            //Nếu thêm thành công thì load lại danh sách người dùng.
+            GetListStaff();
+            // getELE("btnDong").click();
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+
+}
 //Function Delete Staff__1.1
 function deleteStaff(id) {
-    staff.DeleteStaffServices(id)
+    newStaff.DeleteStaffServices(id)
         .then(function (result) {
             //Nếu xóa thành công thì load lại danh sách người dùng.
             GetListStaff();
+            alert("Xóa Thành Công");
         })
         .catch(function (error) {
             console.log(error);
@@ -127,7 +122,14 @@ function deleteStaff(id) {
 }
 //Function Edit Staff__1.2
 function editStaff(id) {
-    staff.GetDetailServices(id)
+    var modalTitle = document.querySelector("#myModal .modal-title");
+    modalTitle.innerHTML = "Cập Nhật Thông Tin Nhân Viên";
+
+    var modalFooter = document.querySelector("#myModal .modal-footer");
+    modalFooter.innerHTML = `
+        <button class="btn btn-success" onclick="updateNhanVien('${id}')">Cập Nhật</button>
+    `;
+    newStaff.GetDetailServices(id)
         .then(function (result) {
             console.log(result.data);
             getELE("tknv").value = result.data.taiKhoan;
@@ -145,21 +147,11 @@ function editStaff(id) {
 }
 //Function Update thông tin nhân Viên.
 function updateNhanVien(id) {
-    var taiKhoan = getELE("tknv").value;
-    var hoTen = getELE("name").value;
-    var email = getELE("email").value;
-    var matKhau = getELE("password").value;
-    var ngayLam = getELE("datepicker").value;
-    var luongCB = getELE("luongCB").value;
-    var chucVu = getELE("chucvu").value;
-    var gioLam = getELE("gioLam").value;
-    var nhanVien = new staff(taiKhoan, hoTen, matKhau, email, ngayLam, luongCB, chucVu, gioLam);
-    console.log(nhanVien);
-
-    staff.UpdateInfroServices(nhanVien, id)
+    var newNhanVien = getInfroFromUser();
+    newStaff.UpdateInfroServices(newNhanVien, id)
         .then(function (result) {
             GetListStaff();
-            getELE("btnDong").click();
+            document.querySelector("#myModal .close").click();
             getELE("#formND").reset();
         })
         .catch(function (error) {
