@@ -17,26 +17,26 @@ function Staff(_taiKhoan, _hoTen, _matKhau, _email, _ngayLam, _luongCB, _chucVu,
     this.calcSalary = function () {
         switch (this.chucVu) {
             case "Sếp":
-                this.tongLuong = this.luongCB * 3;
+                this.tongLuong = this.luongCB *3;
                 break;
             case "Trưởng phòng":
-                this.tongLuong = this.luongCB * 2;
+                this.tongLuong = this.luongCB *2;
+                break
+            case "Nhân viên":
+                this.tongLuong = this.luongCB;
                 break;
-            default:
-                this.tongLuong = this.luongCB ;
         }
-        return tongLuong;
     }
     //Phương thức xếp loại nhân viên
-    this.Classification = function (hours) {
-        if (hours >= 192) {
-            this.loaiNV = "Nhân Viên Xuất Sắc";
-        } else if (hours >= 176) {
-            this.loaiNV = "Nhân Viên Giỏi";
-        } else if (hours >= 160) {
-            this.loaiNV = "Nhân Viên Khá";
+    this.Classification = function () {
+        if (this.gioLam >= 192) {
+            this.loaiNV = "Xuất Sắc";
+        } else if (this.gioLamrs >= 176) {
+            this.loaiNV = "Giỏi";
+        } else if (this.gioLam >= 160) {
+            this.loaiNV = "Khá";
         } else {
-            this.loaiNV = "Nhân Viên Trung Bình";
+            this.loaiNV = "Trung Bình";
         }
     }
 
