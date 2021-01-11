@@ -62,7 +62,7 @@ function getButtonAddStaff() {
         <button
             id="btn-add"
             class="btn btn-success"
-            onclick="addStaff()">
+            onclick="addStaff();">
             Add
         </button>
         <button
@@ -75,6 +75,10 @@ function getButtonAddStaff() {
             </button>
     `;
 }
+getELE(btnThem).addEventListener("click", function () {
+  getButtonAddStaff();
+});
+
 // Add Staff
 function addStaff() {
   var taiKhoan = getELE("tknv").value;
@@ -251,7 +255,7 @@ function editStaff(id) {
               class="btn btn-danger"
               data-dismiss="modal"
             >
-              Đóng
+              Close
             </button>
     `;
 
@@ -400,6 +404,7 @@ function updateNhanVien(id) {
     nhanVien.calcSalary();
     console.log(nhanVien);
     nhanVien.Classification();
+
     newStaffServices
       .UpdateInfroServices(nhanVien, id)
       .then(function (result) {
