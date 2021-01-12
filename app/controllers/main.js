@@ -75,10 +75,6 @@ function getButtonAddStaff() {
             </button>
     `;
 }
-getELE(btnThem).addEventListener("click", function () {
-  getButtonAddStaff();
-});
-
 // Add Staff
 function addStaff() {
   var taiKhoan = getELE("tknv").value;
@@ -89,8 +85,9 @@ function addStaff() {
   var luongCB = getELE("luongCB").value;
   var chucVu = getELE("chucvu").value;
   var gioLam = getELE("gioLam").value;
-  // Check Validation.
+  // Validation.
   var iSValid = true;
+
   // Check tên Tài Khoản.
   iSValid &=
     validation.checkEmpty(
@@ -98,14 +95,11 @@ function addStaff() {
       getELE("tbTKNV"),
       "Tên tài khoản không được để trống!"
     ) &&
-    validation.checkValue(
+    validation.checkTK(
       taiKhoan,
       getELE("tbTKNV"),
-      "Tên tài khoản tối đa 4-6 ký sô",
-      4,
-      6
+      "Tên tài khoản chỉ chữ và số ít nhất 4 ký tự và nhiều nhất 6 ký tự!"
     );
-
   // Check Name
   iSValid &=
     validation.checkEmpty(
@@ -113,10 +107,10 @@ function addStaff() {
       getELE("tbTen"),
       "Tên Nhân Viên không được để trống!"
     ) &&
-    validation.checkLetters(
+    validation.checkName(
       hoTen,
       getELE("tbTen"),
-      "Tên Nhân Viên không hợp lệ"
+      "Tên nhân viên chỉ được nhập ký tự (En-en)"
     );
 
   //Check Email
@@ -134,25 +128,24 @@ function addStaff() {
       getELE("tbMatKhau"),
       "Password không được để trống!"
     ) &&
-    validation.checkLength(
-      matKhau,
-      getELE("tbMatKhau"),
-      "Password có độ dài từ 6-10 ký tự!",
-      6,
-      10
-    ) &&
     validation.checkFormartPass(
       matKhau,
       getELE("tbMatKhau"),
-      "Password không hợp lệ"
+      "Mật khẩu từ 6-10 ký tự (Ví dụ: Gnoht@1)"
     );
 
   //check ngày làm: kiểm tra có đúng theo format yyyy/dd/mm
-  iSValid &= validation.checkDate(
-    ngayLam,
-    getELE("tbNgay"),
-    "Ngày sinh không hợp lệ!"
-  );
+  iSValid &=
+    validation.checkDate(
+      ngayLam,
+      getELE("tbNgay"),
+      "Ngày sinh không hợp lệ!"
+    ) &&
+    validation.checkEmpty(
+      luongCB,
+      getELE("tbNgay"),
+      "Ngày làm không được bỏ trống!"
+    );
 
   //check lương Cơ bản
   iSValid &=
@@ -161,10 +154,10 @@ function addStaff() {
       getELE("tbLuongCB"),
       "Lương cơ bản không được để trống!"
     ) &&
-    validation.checkValue(
+    validation.checkSalary(
       luongCB,
-      getELE("tbTKNV"),
-      "Lương cơ bản 1 000 000 - 20 000 000",
+      getELE("tbLuongCB"),
+      "Lương cơ bản 1 Triệu VNĐ  - 20 Triệu VND",
       1000000,
       20000000
     );
@@ -183,7 +176,7 @@ function addStaff() {
       getELE("tbGiolam"),
       "Giờ làm không được để trống!"
     ) &&
-    validation.checkValue(
+    validation.checkSalary(
       gioLam,
       getELE("tbGiolam"),
       "Giờ làm từ 80 - 200 giờ",
@@ -205,9 +198,9 @@ function addStaff() {
       gioLam
     );
     nhanVien.calcSalary();
-    console.log(nhanVien);
-    nhanVien.Classification();
 
+    nhanVien.Classification();
+    console.log(nhanVien);
     newStaffServices
       .AddStaffServices(nhanVien)
       .then(function (result) {
@@ -286,8 +279,9 @@ function updateNhanVien(id) {
   var luongCB = getELE("luongCB").value;
   var chucVu = getELE("chucvu").value;
   var gioLam = getELE("gioLam").value;
-  // Check Validation.
+  // Validation.
   var iSValid = true;
+
   // Check tên Tài Khoản.
   iSValid &=
     validation.checkEmpty(
@@ -295,14 +289,11 @@ function updateNhanVien(id) {
       getELE("tbTKNV"),
       "Tên tài khoản không được để trống!"
     ) &&
-    validation.checkValue(
+    validation.checkTK(
       taiKhoan,
       getELE("tbTKNV"),
-      "Tên tài khoản tối đa 4-6 ký sô",
-      4,
-      6
+      "Tên tài khoản chỉ chữ và số (min: 4 - max: 6)(en)!"
     );
-
   // Check Name
   iSValid &=
     validation.checkEmpty(
@@ -310,10 +301,10 @@ function updateNhanVien(id) {
       getELE("tbTen"),
       "Tên Nhân Viên không được để trống!"
     ) &&
-    validation.checkLetters(
+    validation.checkName(
       hoTen,
       getELE("tbTen"),
-      "Tên Nhân Viên không hợp lệ"
+      "Tên nhân viên chỉ được nhập ký tự (En-en)"
     );
 
   //Check Email
@@ -331,25 +322,24 @@ function updateNhanVien(id) {
       getELE("tbMatKhau"),
       "Password không được để trống!"
     ) &&
-    validation.checkLength(
-      matKhau,
-      getELE("tbMatKhau"),
-      "Password có độ dài từ 6-10 ký tự!",
-      6,
-      10
-    ) &&
     validation.checkFormartPass(
       matKhau,
       getELE("tbMatKhau"),
-      "Password không hợp lệ"
+      "Mật khẩu từ 6-10 ký tự (Ví dụ: Gnoht@1)"
     );
 
   //check ngày làm: kiểm tra có đúng theo format yyyy/dd/mm
-  iSValid &= validation.checkDate(
-    ngayLam,
-    getELE("tbNgay"),
-    "Ngày sinh không hợp lệ!"
-  );
+  iSValid &=
+    validation.checkDate(
+      ngayLam,
+      getELE("tbNgay"),
+      "Ngày sinh không hợp lệ!"
+    ) &&
+    validation.checkEmpty(
+      luongCB,
+      getELE("tbNgay"),
+      "Ngày làm không được bỏ trống!"
+    );
 
   //check lương Cơ bản
   iSValid &=
@@ -358,10 +348,10 @@ function updateNhanVien(id) {
       getELE("tbLuongCB"),
       "Lương cơ bản không được để trống!"
     ) &&
-    validation.checkValue(
+    validation.checkSalary(
       luongCB,
-      getELE("tbTKNV"),
-      "Lương cơ bản 1 000 000 - 20 000 000",
+      getELE("tbLuongCB"),
+      "Lương cơ bản 1 Triệu VNĐ  - 20 Triệu VND",
       1000000,
       20000000
     );
@@ -380,14 +370,13 @@ function updateNhanVien(id) {
       getELE("tbGiolam"),
       "Giờ làm không được để trống!"
     ) &&
-    validation.checkValue(
+    validation.checkSalary(
       gioLam,
       getELE("tbGiolam"),
       "Giờ làm từ 80 - 200 giờ",
       80,
       200
     );
-
   // iSValid = true;
   if (iSValid) {
     //Thể hiện của lớp đối tượng
@@ -408,7 +397,7 @@ function updateNhanVien(id) {
     newStaffServices
       .UpdateInfroServices(nhanVien, id)
       .then(function (result) {
-        console.log(reset);
+        console.log(result);
         GetListStaff();
       })
       .catch(function (error) {
