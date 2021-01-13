@@ -19,6 +19,15 @@ function GetListStaff() {
       console.log(error);
     });
 }
+function filterClassification(Classification) {
+  return result.data.filter(function (nhanVien) {
+    return Classification === nhanVien.loaiNV;
+  });
+}
+getELE("searchName").onkeyup = function () {
+  var chuoiTimKiem = getEle("searchName").value;
+  showTable(filterClassification(chuoiTimKiem));
+};
 // Show result
 function showTable(nhanVienList) {
   var tbody = getELE("tableDanhSach");
@@ -211,7 +220,7 @@ function addStaff() {
         console.log(error);
       });
     reset();
-    getEle("btn-add").setAttribute("data-dismiss", "modal");
+    getELE("btnDong").click();
   }
 }
 //reset
@@ -404,6 +413,6 @@ function updateNhanVien(id) {
         console.log(error);
       });
     reset();
-    getEle("btn-update").setAttribute("data-dismiss", "modal");
+    getELE("btnDong").click();
   }
 }
